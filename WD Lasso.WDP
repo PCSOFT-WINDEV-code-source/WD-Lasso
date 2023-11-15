@@ -1,0 +1,113 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : WD Lasso
+ major_version : 28
+ minor_version : 0
+ type : 4097
+ description : WD Lasso
+ subtype : 0
+project :
+ identifier : 0x0
+ internal_properties : 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
+ configurations :
+  -
+    name : WD Lasso
+    internal_properties : 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
+    configuration_id : 15276157374606297765
+    type : 1
+    generation_name : WD Lasso.exe
+    version :
+     version : VI200066F
+     autoincrement_version : false
+    icon_filename : .\MODIF6.ICO
+    language : 1
+ elements :
+  identifier : 0x4af44845000f3a08
+  elements :
+   -
+     name : CLasso
+     identifier : 0x3dabe3003c3045b3
+     internal_properties : CAAAAAgAAAABfXmtGkfvgEU1SnG8hH+t45De1gbIa9+9Snlhfs/HeYullmOXYZdCJhKMdDy0TLwEDA==
+     physical_name : .\CLasso.wdc
+     type : 4
+   -
+     name : Procedures globales de WD Lasso
+     identifier : 0x3dabe1da71f2d131
+     internal_properties : CAAAAAgAAAADf3uvHEnh+lM/SHO+h3VPvfzEHJ1hbyauM/6aMt48xDy0p2KVY5VAIByGcjKuSr4GDg==
+     physical_name : .\Procedures globales de WD Lasso.wdg
+     type : 7
+   -
+     name : TEST_Principale
+     identifier : 0x467fe573000aec55
+     internal_properties : CAAAAAgAAAAVcX2hHnszbHERFl1Yokcd50CiMnFFl+ay8jO1E/0ZJ4V7+JF7RXOeQv74wECwSLgAAA==
+     physical_name : .\TEST_Principale.wxt
+     type : 17
+   -
+     name : FEN_Principale
+     identifier : 0x49e4463600007508
+     internal_properties : CAAAAAgAAADUsjx4Rzx0d96KP0axzLIY9qsF5W08T7FKJD4A5iPpf3Vp8JliXoq3q5cB/4d5AffBQQ==
+     physical_name : .\FEN_Principale.wdw
+     type : 2
+  other_elements :
+   -
+     physical_name : .\diode_verte.GIF
+   -
+     physical_name : .\inter_off.gif
+   -
+     physical_name : .\inter_on.gif
+   -
+     physical_name : .\diode_rouge.GIF
+   -
+     physical_name : .\Description.rtf
+   -
+     physical_name : .\Description.gif
+  net_assemblies : []
+  uwp_api : []
+  external_components : []
+  internal_components : []
+ report_and_queries_enabled : false
+ common_generation_directory : true
+ languages :
+  - fr-FR
+ wd_style_sheet : ".\\WD Lasso.sty\r\n.\\WD7 Lasso.gab"
+ code_elements :
+  internal_properties : CAAAAAgAAADsT8X4pkB29Cx9BNAYTu6TJCPhJXiKhkQjWGL9lCgc5iAllLPBdntixAbWqgZX41mPLkDPsNl1fDbO0GR45RPN+OBu
+  type_code : 0
+  p_codes :
+   -
+     code : |1-
+      
+     type : 196608
+   -
+     code : |1-
+      
+     type : 196619
+   -
+     type : 196621
+   -
+     type : 196627
+     enabled : false
+  orphans :
+   -
+     name : WD Lasso
+     identifier : 0x4af4484500143a66
+     code_elements :
+      type_code : 159
+      p_codes : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+rad :
+ internal_properties : CAAAAAgAAABhIL0UXeZmxDJxY3Xy0Q==
+project_explorer :
+ explorer_type : project
+ children :
+  -
+    name : FenPresentation_Ex
+    explorer_type : custom_folder
+resources :
+ string_res :
+  identifier : 0x0
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAAAd98VSJfHHqE3P0QHwrwdhn7ig8dWBR6valpUTgnAMTVXiDg==

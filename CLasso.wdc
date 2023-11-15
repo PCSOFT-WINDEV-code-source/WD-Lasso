@@ -1,0 +1,385 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : CLasso
+ major_version : 28
+ minor_version : 0
+ type : 4
+ description : ""
+ subtype : 0
+class :
+ identifier : 0x3dabe26c276f0d94
+ internal_properties : CAAAAAgAAAB2/vstTMCJbS/hlxjFxirSqKvCUuv8YxgpWyl7S3iA
+ code_elements :
+  type_code : 10
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAADemYISDTqlWEOes06SF2x/uwCB/bSlJO5ZI/eDVe/2DxfovDntLfcP7tpbGXVCL9T3gG9/g72FBC8Asj1vMHOLeMOKNxrOg6D12RIwFdAZbY615I1lzTX7l+3/jkx/XjFiiRuvnxkOpU6nTw==
+     code : |1+
+      ExternE "Winconst.wl"			// Importation des constantes Windows
+      
+      CLasso est une classe
+      	// Coordonnées du lasso de sélection
+      	m_PointX1, m_PointY1 sont des entiers
+      	m_PointX2, m_PointY2 sont des entiers
+      	
+      	// Coordonnées triées du lasso de sélection
+      	m_HautGaucheX, m_HautGaucheY sont des entiers
+      	m_BasDroiteX, m_BasDroiteY sont des entiers
+      	m_nLargeur, m_nHauteur sont des entiers
+      	
+      	// Nom du champ image
+      	m_ChampImg est un champ
+      	
+      	// Nom des procédures CallBack définies par l'utilisateur
+      	m_sProcedureSurvol est une chaine
+      	m_sProcedureClic est une chaine
+      	
+      Fin
+     type : 131072
+  procedures :
+   -
+     name : Constructeur
+     procedure_id : 4443894411517431198
+     type_code : 27
+     code : |1-
+      Procédure Constructeur(oChampImage est un champ,bActivationEvenement=vrai)
+      
+      // On mémorise le nom du champ image
+      :m_ChampImg <- oChampImage
+      
+      // On indique le curseur de survol du champ image
+      :m_ChampImg..CurseurSouris = CurCroix
+      
+      // Gestion par événement ou par l'utilisateur ?
+      Si bActivationEvenement = Vrai alors
+      	Evénement(:ClicGauche, :m_ChampImg..NomComplet, ::WM_LBUTTONDOWN)
+      	Evénement(:SurvolSouris, :m_ChampImg..NomComplet, ::WM_MOUSEMOVE)
+      FIN
+      
+      // Par défaut, il n'y a pas de procédures utilisateur appelées
+      :m_sProcedureSurvol = ""
+      :m_sProcedureClic = ""
+     type : 589824
+   -
+     name : Destructeur
+     procedure_id : 4443894411688152478
+     type_code : 28
+     code : |1+
+      Procédure Destructeur()
+      
+     type : 655360
+   -
+     name : NouveauLasso
+     procedure_id : 4443894587978657892
+     type_code : 12
+     code : |1+
+      Procédure NouveauLasso()
+      
+      // On réinitialise la position de la sélection
+      :m_PointX1 = SourisPosX()
+      :m_PointY1 = SourisPosY() 
+      :m_PointX2 = SourisPosX()
+      :m_PointY2 = SourisPosY()
+       
+       // On trie les coordonnées
+      :TrierCoordonnées() 
+      
+      // Début du tracé
+      dDébutDessin(:m_ChampImg)
+      
+       //On change le mode de tracé
+      dstylo(iblanc,itiret)
+      dChangeMode(dessinXOR)
+     type : 458752
+   -
+     name : DeplacerLasso
+     procedure_id : 4443894639564087335
+     type_code : 12
+     code : |1+
+      Procédure DeplacerLasso()
+      
+      // Est-ce que le bouton gauche de la souris est enfoncé ?
+      si ToucheEnfoncée(teBoutonG) alors
+      	
+      	// On détermine la position de la souris dans le champ image
+      	Res est un entier = CurseurPos(cpClient)
+      
+      	// On vérifie que la position de la souris a changé
+      	SI ((PoidsFaible(Res)=:m_PointX2) et (PoidsFort(Res)=:m_PointY2)) alors 
+      		Multitache(-5)
+      		RENVOYER Vrai
+      	FIN
+      
+      	// On supprime si nécessaire le dessin de l'ancien lasso
+      	SI :m_PointX1<>:m_PointX2 et :m_PointY1<>:m_PointY2 alors		
+      		:DessinerLasso(:m_HautGaucheX,:m_HautGaucheY,:m_BasDroiteX,:m_BasDroiteY)
+      	FIn
+      
+      	// Gestion du bord droite du champ image
+      	SI PoidsFaible(Res)>m_ChampImg..x+m_ChampImg..largeur alors				
+      		si :m_PointX1>:m_PointX2 alors
+      			:m_PointX1=m_ChampImg..largeur
+      		sinon
+      			:m_PointX2=m_ChampImg..largeur
+      		FIN
+      	FIN
+      
+      	// Gestion du bord bas du champ image
+      	SI PoidsFort(Res)>:m_ChampImg..y+m_ChampImg..hauteur alors		
+      		si :m_PointY1>:m_PointY2 ALORS
+      			:m_PointY1=m_ChampImg..Hauteur
+      		sinon
+      			:m_PointY2=m_ChampImg..Hauteur
+      		FIN
+      	FIN
+      
+      	// Gestion du bord gauche de l'image
+      	SI PoidsFaible(Res)<m_ChampImg..x alors		
+      		si :m_PointX1>:m_PointX2 alors
+      			:m_PointX2=0
+      		sinon
+      			:m_PointX1=0
+      		FIN
+      	FIN
+      
+      	// Gestion du bord haut de l'image
+      	SI PoidsFort(Res)<:m_ChampImg..y alors		
+      		si :m_PointY1>:m_PointY2 ALORS
+      			:m_PointY2=0
+      		sinon
+      			:m_PointY1=0
+      		FIN
+      	FIN
+      
+      	// On mémorise la nouvelle position de la souris
+      	:m_PointX2=SourisPosX()
+      	:m_PointY2=SourisPosY()
+      
+      	// On trie les coordonnées du lasso de sélection
+      	:TrierCoordonnées()
+      	
+      	// On dessine la zone de sélection
+      	:DessinerLasso(:m_HautGaucheX,:m_HautGaucheY,:m_BasDroiteX,:m_BasDroiteY)	
+      
+      SINON
+      	// Inutile de prendre du temps processeur
+      	Multitache(-1)
+      fin
+      renvoyer vrai
+     type : 458752
+   -
+     name : sCoordonnéesLasso
+     procedure_id : 4443894729086873489
+     type_code : 12
+     code : |1-
+      Procédure sCoordonnéesLasso()
+      
+      // On renvoie les coordonnées du Lasso de sélection
+      RENVOYER :m_HautGaucheX+TAB+:m_HautGaucheY+RC+:m_BasDroiteX+TAB+:m_BasDroiteY+RC+:m_nLargeur+TAB+:m_nHauteur
+     type : 458752
+   -
+     name : TrierCoordonnées
+     procedure_id : 4443895047467782151
+     type_code : 12
+     code : |1+
+      Procédure PRIVEE TrierCoordonnées()
+      
+      // Initialisation des coordonnées
+      :m_HautGaucheX = :m_PointX1
+      :m_HautGaucheY = :m_PointY1
+      :m_BasDroiteX = :m_PointX2
+      :m_BasDroiteY = :m_PointY2
+      
+      // On trie les coordonnées pour distinguer le coin Haut Gauche et le coin Bas Droit
+      xTemp,yTemp sont des entiers
+      si :m_HautGaucheX>:m_BasDroiteX alors
+      	xTemp=:m_HautGaucheX
+      	:m_HautGaucheX=:m_BasDroiteX
+      	:m_BasDroiteX=xTemp
+      FIN
+      si :m_HautGaucheY>:m_BasDroiteY alors
+      	yTemp=:m_HautGaucheY
+      	:m_HautGaucheY=:m_BasDroiteY
+      	:m_BasDroiteY=yTemp
+      FIN
+      
+      // On mémorise la hauteur et la largeur
+      :m_nHauteur = :m_BasDroiteY-:m_HautGaucheY
+      :m_nLargeur = :m_BasDroiteX-:m_HautGaucheX
+     type : 458752
+   -
+     name : DessinerLasso
+     procedure_id : 4443898699146348663
+     type_code : 12
+     code : |1+
+      Procédure prive DessinerLasso(X1,Y1,X2,Y2)
+      
+      // Si Lignes superposées, on trace une ligne
+      SI X1 = X2 alors
+      	dLigne(X1,Y1,X2,Y2,iTransparent)		
+      	RETOUR
+      FIN
+      
+      SI Y1 = Y2 alors
+      	dLigne(X1,Y1,X2,Y2,iTransparent)			
+      	RETOUR	
+      FIN
+      
+      // Tracé du lasso (rappel : utilisation de dChangeMode pour être en mode XOR)
+      dRectangle(X1-1,Y1-1,X2+1,Y2+1,iTransparent)	
+     type : 458752
+   -
+     name : AfficherImageSelection
+     internal_properties : CAAAAAgAAABWtdMVMYgEnrxZ0Hem+VeVCbRkUw/Wr/tm7G4tiGL+dfHsTj0e9dxKBl2LREZ35WIhXWCNcxegMQ239drZrgV8ZlMeRklGa2ZOaJItsrSbSPS91GSzzjjwngxTSNrEF5y4rqN+XGt61bQMBi3Ln8vkWQBh0HwnRCTEwNdLuB0UTLxuQxpfqzDSCtQ1yL+9yeqLLQsdbgq3KqLsBsEp5Elujj35cU2ybvra/mZjQplrR8Y=
+     procedure_id : 4443911221668661459
+     type_code : 12
+     code : |1+
+      Procédure AfficherImageSelection(sNomChampImgDest)
+      
+      Si :m_nLargeur=0 ou :m_nHauteur = 0 alors RETOUR
+      
+      // On doit respecter le ratio de la sélection par rapport aux proportions du champ image
+      fRatioSelection est un réel
+      SI :m_nHauteur<>:m_nLargeur alors	
+      	fRatioSelection = Abs(:m_nHauteur/:m_nLargeur)
+      SINON
+      	fRatioSelection = 1
+      FIN
+      SI :m_nLargeur > sNomChampImgDest..LargeurInitiale alors
+      	// La sélection est plus large que la prévisu : stretch en largeur
+      	SI :m_nHauteur > sNomChampImgDest..Hauteur alors
+      		// La taille de la sélection est plus grande que la prévisu : diminution de l'image		
+      		SI fRatioSelection > 1 alors
+      			// Image plus haute que large
+      			sNomChampImgDest..Hauteur = sNomChampImgDest..HauteurInitiale
+      			sNomChampImgDest..Largeur = sNomChampImgDest..Hauteur/fRatioSelection
+      		SINON
+      			// Image plus large que haute
+      			sNomChampImgDest..Hauteur = sNomChampImgDest..Largeur*fRatioSelection
+      			sNomChampImgDest..Largeur = sNomChampImgDest..LargeurInitiale
+      		FIN
+      	SINON
+      		// L'image tient en hauteur, on adapte la largeur
+      		sNomChampImgDest..Largeur = :m_nLargeur
+      		sNomChampImgDest..Hauteur = sNomChampImgDest..HauteurInitiale
+      	FIN
+      SINON
+      	// La sélection est moins large que la prévisu : possibilité de zoom
+      	SI :m_nHauteur > sNomChampImgDest..Hauteurinitiale alors
+      		// L'image doit être adaptée en hauteur, on adapte la hauteur pour garder le ratio de l'image
+      		sNomChampImgDest..Largeur = sNomChampImgDest..Hauteur/fRatioSelection
+      		sNomChampImgDest..Hauteur = sNomChampImgDest..HauteurInitiale
+      	SINON
+      		// l'image est plus petite que la sélection, on zoom au maximum
+      		SI fRatioSelection > 1 alors
+      			// Image plus haute que large
+      			sNomChampImgDest..Hauteur = sNomChampImgDest..HauteurInitiale
+      			sNomChampImgDest..Largeur = sNomChampImgDest..Hauteur/fRatioSelection			
+      		SINON
+      			// Image plus large que haute
+      			sNomChampImgDest..Hauteur = sNomChampImgDest..Largeur*fRatioSelection			
+      			sNomChampImgDest..Largeur = sNomChampImgDest..LargeurInitiale
+      		FIN
+      	FIN
+      FIN
+      
+      // On limite la dimension du champ de visualisation
+      SI sNomChampImgDest..Largeur>sNomChampImgDest..LargeurInitiale alors sNomChampImgDest..Largeur=sNomChampImgDest..LargeurInitiale
+      SI sNomChampImgDest..Hauteur>sNomChampImgDest..HauteurInitiale alors sNomChampImgDest..Hauteur=sNomChampImgDest..HauteurInitiale
+      
+      // On libère les ressources
+      dFinDessin(sNomChampImgDest)
+      
+      // Copie du contenu du lasso de sélection dans le champ image destination
+      dCopieImage(:m_ChampImg,sNomChampImgDest,copieSrcCopie,...
+      						:m_HautGaucheX+1,...
+      						:m_HautGaucheY+1,...		
+      						:m_nHauteur-1,...
+      						:m_nLargeur-1)	
+     type : 458752
+   -
+     name : ClicGauche
+     internal_properties : CAAAAAgAAADRphRiGJdPkZI1pdWLPbTK1b9mWIxdiZ1Qq802rNkyUOiqKJCLJUNUK2sBay6kI29FnDEnco/lhhKhr84UxwrMhRo8ITkmz1uNcc6VX3nLUGuizjC2HWiFBgtaD6MgTV7eBa8x14834DyHt68HEWdryMZm1mcdGMxWJTvTm41e3Q==
+     procedure_id : 4443995730151209138
+     type_code : 12
+     code : |1-
+      // Traitement automatique des exceptions :   exécuter le bloc de code CAS EXCEPTION:
+      //
+      Procédure PRIVEE  ClicGauche()
+      
+      // Fonctionnement classique
+      :NouveauLasso()
+      
+      // Utilisation de la procédure définie par l'utilisateur
+      SI PAS :m_sProcedureClic~="" alors
+      	ExécuteTraitement(:m_sProcedureClic,trtProcédure)
+      FIN
+      
+      CAS EXCEPTION:
+      	Erreur(<§$0002§>,ExceptionInfo())
+     type : 458752
+   -
+     name : SurvolSouris
+     internal_properties : CAAAAAgAAADRphRiGJdPkZI1pdWLPbTK1b9mWIxdiZ1Qq802rNkyUOiqKJCLJUNUK2sBay6kI29FnDEnco/lhhKhr84UxwrMhRo8ITkmz1uNcc6VX3nLUGuizjC2HWiFBgtaD6MgTV7eBa8x14834DyHt68HEWdryMZm1mcdGMxWJTvTm41e3Q==
+     procedure_id : 4443995764504533210
+     type_code : 12
+     code : |1-
+      // Traitement automatique des exceptions :   exécuter le bloc de code CAS EXCEPTION:
+      //
+      Procédure PRIVEE SurvolSouris()
+      
+      // Fonctionnement classique
+      :DeplacerLasso()
+      
+      // Utilisation de la procédure définie par l'utilisateur
+      SI pas :m_sProcedureSurvol~="" alors
+      	ExécuteTraitement(:m_sProcedureSurvol,trtProcédure)
+      	
+      FIN
+      CAS EXCEPTION:
+      	Erreur(<§$0002§>,ExceptionInfo())
+     type : 458752
+   -
+     name : GestionSurvol
+     procedure_id : 4444001606462396096
+     type_code : 12
+     code : |1-
+      Procédure GestionSurvol(sNomProcCallBack)
+      
+      // Mémorise la procédure utilisateur à exécuter en cas de survol du champ image
+      :m_sProcedureSurvol = sNomProcCallBack
+     type : 458752
+   -
+     name : GestionClic
+     procedure_id : 4444003341681558580
+     type_code : 12
+     code : |1-
+      Procédure GestionClic(sNomProcCallBack)
+      
+      // Mémorise la procédure utilisateur à exécuter en cas de clic sur le champ image
+      :m_sProcedureClic = sNomProcCallBack
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+resources :
+ string_res :
+  identifier : 0x3dabe265132ff495
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+  strings :
+   -
+     text :
+      fr-FR : ":ClicGauche"
+     index : 0
+   -
+     text :
+      fr-FR : ":SurvolSouris"
+     index : 1
+   -
+     text :
+      fr-FR : Erreur lors de l'appel à la procédure utilisateur
+     index : 2
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ
